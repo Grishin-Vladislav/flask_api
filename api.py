@@ -46,7 +46,3 @@ def login_as_user(email, password):
         }
     )
     log(response)
-
-
-create_user('im fferrf', 'screrream@ddfrdd.com', 'ilovecats')
-# login_as_user('screrream@ddfrdd.com', 'ilovecats')
