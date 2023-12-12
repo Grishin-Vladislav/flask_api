@@ -37,6 +37,13 @@ def patch_user(user_id, **kwargs):
     log(response)
 
 
+def delete_user(user_id):
+    response = requests.delete(
+        base_url + f'users/{user_id}'
+    )
+    log(response)
+
+
 def login_as_user(email, password):
     response = requests.post(
         base_url + f'login',
@@ -44,5 +51,38 @@ def login_as_user(email, password):
             'email': email,
             'password': password
         }
+    )
+    log(response)
+
+
+def create_advert(name, description):
+    response = requests.post(
+        base_url + 'adverts',
+        json={
+            'name': name,
+            'description': description
+        }
+    )
+    log(response)
+
+
+def get_advert(advert_id):
+    response = requests.get(
+        base_url + f'adverts/{advert_id}'
+    )
+    log(response)
+
+
+def patch_advert(advert_id, **kwargs):
+    response = requests.patch(
+        base_url + f'adverts/{advert_id}',
+        json=kwargs
+    )
+    log(response)
+
+
+def delete_advert(advert_id):
+    response = requests.delete(
+        base_url + f'adverts/{advert_id}'
     )
     log(response)
