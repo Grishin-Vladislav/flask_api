@@ -1,3 +1,5 @@
+import time
+
 import requests
 
 base_url = 'http://127.0.0.1:5000/'
@@ -29,17 +31,23 @@ def create_user(name, email, password):
     log(response)
 
 
-def patch_user(user_id, **kwargs):
+def patch_user(token, **kwargs):
     response = requests.patch(
-        base_url + f'users/{user_id}',
+        base_url + 'users',
+        headers={
+            'Authorization': f'Bearer {token}'
+        },
         json=kwargs
     )
     log(response)
 
 
-def delete_user(user_id):
+def delete_user(token):
     response = requests.delete(
-        base_url + f'users/{user_id}'
+        base_url + 'users',
+        headers={
+            'Authorization': f'Bearer {token}'
+        }
     )
     log(response)
 
@@ -52,12 +60,17 @@ def login_as_user(email, password):
             'password': password
         }
     )
+    token = response.json()['access-token']
     log(response)
+    return token
 
 
-def create_advert(name, description):
+def create_advert(token, name, description):
     response = requests.post(
         base_url + 'adverts',
+        headers={
+            'Authorization': f'Bearer {token}'
+        },
         json={
             'name': name,
             'description': description
@@ -73,16 +86,22 @@ def get_advert(advert_id):
     log(response)
 
 
-def patch_advert(advert_id, **kwargs):
+def patch_advert(token, advert_id, **kwargs):
     response = requests.patch(
         base_url + f'adverts/{advert_id}',
+        headers={
+            'Authorization': f'Bearer {token}'
+        },
         json=kwargs
     )
     log(response)
 
 
-def delete_advert(advert_id):
+def delete_advert(token, advert_id):
     response = requests.delete(
-        base_url + f'adverts/{advert_id}'
+        base_url + f'adverts/{advert_id}',
+        headers={
+            'Authorization': f'Bearer {token}'
+        }
     )
     log(response)

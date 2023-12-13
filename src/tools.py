@@ -1,9 +1,9 @@
+from flask import request
 from pydantic import ValidationError
-from flask_scrypt import (generate_password_hash,
-                          generate_random_salt,
-                          check_password_hash)
+from sqlalchemy.exc import IntegrityError
 
 from errors import HttpError
+from src.models import User, Advert
 
 
 def validate(schema_cls, json_data: dict | list):
@@ -16,11 +16,39 @@ def validate(schema_cls, json_data: dict | list):
         raise HttpError(400, error)
 
 
-def hash_password(raw_password) -> dict:
-    salt = generate_random_salt().decode()
-    password = generate_password_hash(raw_password, salt).decode()
-    return {'salt': salt, 'password': password}
+def get_user(user_id: int):
+    user: User | None = request.session.get(User, user_id)
+    if user is None:
+        raise HttpError(404, 'user not found')
+    return user
 
 
-def check_password(password, hash, salt) -> bool:
-    return check_password_hash(password.encode(), hash.encode(), salt.encode())
+def get_advert(advert_id: int):
+    advert: Advert | None = request.session.get(Advert, advert_id)
+    if advert is None:
+        raise HttpError(404, 'advert not found')
+    return advert
+
+
+def get_user_by_email(email: str):
+    user: User | None = request.session.query(User).filter_by(
+        email=email).first()
+    if user is None:
+        raise HttpError(404, 'user not found')
+    return user
+
+
+def add_user(user: User):
+    try:
+        request.session.add(user)
+        request.session.commit()
+    except IntegrityError:
+        raise HttpError(409, 'user already exists')
+
+
+def add_advert(advert: Advert):
+    try:
+        request.session.add(advert)
+        request.session.commit()
+    except IntegrityError:
+        raise HttpError(409, 'advert with this name already exists')

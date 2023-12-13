@@ -42,9 +42,9 @@ def error_handler(error: HttpError):
 
 user_view = UserView.as_view('user_view')
 app.add_url_rule('/users/<int:user_id>',
-                 view_func=user_view, methods=['GET', 'PATCH', 'DELETE'])
+                 view_func=user_view, methods=['GET'])
 app.add_url_rule('/users',
-                 view_func=user_view, methods=['POST'])
+                 view_func=user_view, methods=['POST', 'PATCH', 'DELETE'])
 app.add_url_rule('/login',
                  view_func=LoginView.as_view('login_view'), methods=['POST'])
 
@@ -55,4 +55,4 @@ app.add_url_rule('/adverts',
                  view_func=advert_view, methods=['POST'])
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
